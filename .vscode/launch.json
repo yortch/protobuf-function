@@ -2,6 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "IntegrationTest",
+            "request": "launch",
+            "mainClass": "test.java.com.demo.function.IntegrationTest"
+        },
+        {
             "name": "Attach to Java Functions",
             "type": "java",
             "request": "attach",

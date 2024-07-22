@@ -13,6 +13,25 @@ import prometheus.Types.Sample;
 public class PrometheusClient {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
+        byte[] compressedData = getCompressedData();
+
+        // Send the compressed data to Azure Function
+        URI uri = new URI("https://<your-azure-function-url>/api/PrometheusReceiver");
+        URL url = uri.toURL();
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/x-protobuf");
+
+        try (OutputStream outputStream = connection.getOutputStream()) {
+            outputStream.write(compressedData);
+        }
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("Response Code: " + responseCode);
+    }
+
+    private static byte[] getCompressedData() throws IOException {
         // Create a sample WriteRequest
         WriteRequest writeRequest = WriteRequest.newBuilder()
             .addTimeseries(
@@ -30,20 +49,6 @@ public class PrometheusClient {
 
         // Compress the byte array using Snappy
         byte[] compressedData = Snappy.compress(protobufData);
-
-        // Send the compressed data to Azure Function
-        URI uri = new URI("https://<your-azure-function-url>/api/PrometheusReceiver");
-        URL url = uri.toURL();
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/x-protobuf");
-
-        try (OutputStream outputStream = connection.getOutputStream()) {
-            outputStream.write(compressedData);
-        }
-
-        int responseCode = connection.getResponseCode();
-        System.out.println("Response Code: " + responseCode);
+        return compressedData;
     }
 }

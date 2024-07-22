@@ -1,3 +1,5 @@
+package com.demo.function;
+
 import java.util.Optional;
 
 import org.xerial.snappy.Snappy;
@@ -17,6 +19,10 @@ import java.io.IOException;
 
 public class HttpTriggerFunction {
 
+    /**
+     * This function listens at endpoint "/api/HttpTriggerJava". Invoke it using "curl" command in bash:
+     * 1. curl -d "HTTP Body" {your host}/api/HttpTriggerJava
+     */
     @FunctionName("HttpTriggerJava")
     public HttpResponseMessage run(
         @HttpTrigger(name = "req", methods = {HttpMethod.POST}, 

@@ -25,12 +25,12 @@ public class HttpTriggerFunction {
      */
     @FunctionName("HttpTriggerJava")
     public HttpResponseMessage run(
-        @HttpTrigger(name = "req", methods = {HttpMethod.POST}, dataType = "binary",
+        @HttpTrigger(name = "req", methods = {HttpMethod.POST},
             authLevel = AuthorizationLevel.FUNCTION) HttpRequestMessage<Optional<byte[]>> request,
         final ExecutionContext context) {
 
         context.getLogger().info("Java HTTP trigger processed a request.");
-        context.getLogger().info("Content-Type header: " + request.getHeaders().get("Content-Type"));
+        context.getLogger().info("Content-Type header: " + request.getHeaders().get("content-type"));
 
         byte[] requestBody = request.getBody().orElse(null);
         if (requestBody == null) {
@@ -40,10 +40,15 @@ public class HttpTriggerFunction {
         try {
             byte[] uncompressedData = Snappy.uncompress(requestBody);
             WriteRequest writeRequest = WriteRequest.parseFrom(uncompressedData);
-            context.getLogger().info("Received prometheus request with " + writeRequest.getTimeseriesCount() + " timeseries");
-            context.getLogger().info("First timeseries has " + writeRequest.getTimeseries(0).getSamplesCount() + " samples");
+            String msg = "Received prometheus request with " + writeRequest.getTimeseriesCount() + " timeseries. ";
+            if (writeRequest.getTimeseriesCount() > 0) {
+                if (writeRequest.getTimeseries(0).getSamplesCount() > 0) {
+                    msg += "First timeseries sample value: " + writeRequest.getTimeseries(0).getSamples(0).getValue();
+                }
+            }
+            context.getLogger().info(msg);
             // Process the message
-            return request.createResponseBuilder(HttpStatus.OK).body("Received message: " + writeRequest.getTimeseriesCount()).build();
+            return request.createResponseBuilder(HttpStatus.OK).body(msg).build();
         } catch (InvalidProtocolBufferException e) {
             return request.createResponseBuilder(HttpStatus.BAD_REQUEST).body("Failed to parse Protobuf message").build();
         }

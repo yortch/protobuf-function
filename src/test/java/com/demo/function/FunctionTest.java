@@ -7,6 +7,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Logger;
 
@@ -35,12 +37,14 @@ public class FunctionTest {
     @Test
     public void testHttpTriggerJava() throws Exception {
         // Setup
-        @SuppressWarnings("unchecked")
         final HttpRequestMessage<Optional<byte[]>> req = mock(HttpRequestMessage.class);
 
         double sampleValue = 123.45;
         Optional<byte[]> queryBody = Optional.ofNullable(getCompressedData(sampleValue));
         doReturn(queryBody).when(req).getBody();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("content-type", "application/x-protobuf");
+        doReturn(headers).when(req).getHeaders();
 
         doAnswer(new Answer<HttpResponseMessage.Builder>() {
             @Override

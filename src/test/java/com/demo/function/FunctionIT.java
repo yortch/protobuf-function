@@ -1,5 +1,6 @@
 package com.demo.function;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 import org.xerial.snappy.Snappy;
 
@@ -42,11 +44,13 @@ public class FunctionIT {
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             HttpPost postRequest = new HttpPost(FUNCTION_URL);
             postRequest.setEntity(new ByteArrayEntity(compressedData));
-            postRequest.setHeader("Content-Type", "application/x-protobuf");
+            postRequest.setHeader("content-type", "application/octet-stream");
 
             CloseableHttpResponse response = httpClient.execute(postRequest);
             int responseCode = response.getStatusLine().getStatusCode();
-            System.out.println("Response Code: " + responseCode);
+            String msg = EntityUtils.toString(response.getEntity());
+            System.out.println("Response Code: " + responseCode + ", Content: " + msg);
+            assertEquals(200, responseCode);
         }
         catch (Exception e) {
             fail("Failed to open connection: " + e.getMessage());

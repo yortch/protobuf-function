@@ -25,7 +25,7 @@ public class HttpTriggerFunction {
      */
     @FunctionName("HttpTriggerJava")
     public HttpResponseMessage run(
-        @HttpTrigger(name = "req", methods = {HttpMethod.POST}, 
+        @HttpTrigger(name = "req", methods = {HttpMethod.POST}, dataType = "binary",
             authLevel = AuthorizationLevel.FUNCTION) HttpRequestMessage<Optional<byte[]>> request,
         final ExecutionContext context) {
 

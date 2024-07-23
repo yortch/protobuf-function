@@ -1,15 +1,16 @@
 package com.demo.function;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.util.Optional;
-
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.junit.jupiter.api.Test;
 import org.xerial.snappy.Snappy;
 
 import prometheus.Remote.WriteRequest;
@@ -30,34 +31,27 @@ public class FunctionIT {
 
     @Test
     public void testRequest() {
-        HttpURLConnection connection = null;
-        // Send the compressed data to Azure Function
+        System.out.println("Function URL: " + FUNCTION_URL);
+        byte[] compressedData = null;
         try {
-            System.out.println("Function URL: " + FUNCTION_URL);
-            URI uri = new URI(FUNCTION_URL);
-            URL url = uri.toURL();
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/x-protobuf");
+            compressedData = getCompressedData();
+        } catch (IOException e) {
+            fail("Failed to build request: " + e.getMessage());
+        }
+        // Send the compressed data to Azure Function
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost postRequest = new HttpPost(FUNCTION_URL);
+            postRequest.setEntity(new ByteArrayEntity(compressedData));
+            postRequest.setHeader("Content-Type", "application/x-protobuf");
+
+            CloseableHttpResponse response = httpClient.execute(postRequest);
+            int responseCode = response.getStatusLine().getStatusCode();
+            System.out.println("Response Code: " + responseCode);
         }
         catch (Exception e) {
             fail("Failed to open connection: " + e.getMessage());
         }
 
-        try (OutputStream outputStream = connection.getOutputStream()) {
-            byte[] compressedData = getCompressedData();
-            outputStream.write(compressedData);
-        } catch (Exception e) {
-            fail("Failed to send request: " + e.getMessage());
-        }
-
-        try {
-            int responseCode = connection.getResponseCode();
-            System.out.println("Response Code: " + responseCode);
-        } catch (Exception e) {
-            fail("Failed to get response code: " + e.getMessage());
-        }
     }
 
     private static byte[] getCompressedData() throws IOException{

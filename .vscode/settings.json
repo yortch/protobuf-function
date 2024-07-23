@@ -2,7 +2,7 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "java.configuration.updateBuildConfiguration": "automatic",
     "azureFunctions.javaBuildTool": "maven",
-    "azureFunctions.deploySubpath": "azfunction/target/azure-functions/azure-function-protobuf",
+    "azureFunctions.deploySubpath": "target/azure-functions/azure-function-protobuf",
     "azureFunctions.projectLanguage": "Java",
     "azureFunctions.projectRuntime": "~4",
     "debug.internalConsoleOptions": "neverOpen",

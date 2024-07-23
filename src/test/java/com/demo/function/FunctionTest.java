@@ -39,7 +39,7 @@ public class FunctionTest {
         final HttpRequestMessage<Optional<byte[]>> req = mock(HttpRequestMessage.class);
 
         double sampleValue = 123.45;
-        Optional<byte[]> queryBody = Optional.ofNullable((byte[])getCompressedData(sampleValue));
+        Optional<byte[]> queryBody = Optional.ofNullable(getCompressedData(sampleValue));
         doReturn(queryBody).when(req).getBody();
 
         doAnswer(new Answer<HttpResponseMessage.Builder>() {

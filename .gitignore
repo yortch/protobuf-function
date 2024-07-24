@@ -37,3 +37,8 @@ hs_err_pid*
 local.settings.json
 bin/
 obj/
+**/**/.terraform.lock.hcl
+.azure/**/infra/**
+.azure/**/infra/**/**
+.azure/**/infra/terraform/**/**
+

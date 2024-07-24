@@ -10,6 +10,13 @@ Written in Java using HttpTrigger.
 * [Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Cisolated-process%2Cnode-v4%2Cpython-v2%2Chttp-trigger%2Ccontainer-apps&pivots=programming-language-java#install-the-azure-functions-core-tools)
 * Install [Go](https://go.dev/doc/install) locally in order to generate java classes for .proto files.
 
+Additionally to deploy to Azure the following are required:
+
+* [azd] cli
+* [terraform]
+* [docker]
+
+
 ## Build locally
 
 Run the following command:

@@ -22,3 +22,9 @@ variable "function_app_service_plan_name" {
   type = string
   description = "The name of the app service plan for the function app"
 }
+
+variable "function_worker_runtime" {
+  description = "Functions worker runtime"
+  type = string
+  default = "java"
+}

@@ -1,3 +1,11 @@
+locals {
+
+  static_app_settings = {
+    FUNCTIONS_WORKER_RUNTIME    = var.function_worker_runtime
+  }
+
+}
+
 resource "azurerm_storage_account" "function_storage_account" {
   name                     = var.function_storage_account_name
   resource_group_name      = var.resource_group_name
@@ -21,6 +29,8 @@ resource "azurerm_linux_function_app" "function_app" {
   service_plan_id               = azurerm_service_plan.function_service_plan.id
   storage_account_name          = azurerm_storage_account.function_storage_account.name
   storage_account_access_key    = azurerm_storage_account.function_storage_account.primary_access_key
+
+  app_settings = local.static_app_settings
 
   site_config {
   }

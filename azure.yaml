@@ -6,6 +6,6 @@ infra:
   path: infra/terraform
 services:
   protobuf:
-    project: "."
+    project: .
     host: containerapp
     language: java

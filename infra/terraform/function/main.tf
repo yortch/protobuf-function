@@ -32,6 +32,13 @@ resource "azurerm_linux_function_app" "function_app" {
 
   app_settings = local.static_app_settings
 
+  tags = {
+    azd-service-name = var.service_name
+  }
+
   site_config {
+    application_stack {
+      java_version = "17"
+    }
   }
 }

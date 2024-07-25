@@ -13,6 +13,11 @@ variable "name" {
   description = "The name of the function app"
 }
 
+variable "service_name" {
+  type = string
+  description = "The service name"
+  default = "protobuf"
+}
 variable "function_storage_account_name" {
   type = string
   description = "The name of the storage account for the function app"  

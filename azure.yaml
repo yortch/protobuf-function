@@ -7,5 +7,5 @@ infra:
 services:
   protobuf:
     project: .
-    host: containerapp
+    host: function
     language: java

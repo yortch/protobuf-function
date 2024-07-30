@@ -10,3 +10,7 @@ output "app_service_type" {
     description = "The type of app service created."
     value       = azurerm_linux_function_app.function_app.*.kind
 }
+output "azure_function_app_name" {
+    description = "The name of app function created."
+    value       = azurerm_linux_function_app.function_app.name
+}

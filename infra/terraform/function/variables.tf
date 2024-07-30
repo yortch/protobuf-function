@@ -13,6 +13,18 @@ variable "name" {
   description = "The name of the function app"
 }
 
+variable "application_insights_name" {
+  type = string
+  description = "Application Insights Name"
+  default = "Java Function Application Insights"
+}
+
+variable "log_analytics_name" {
+  type = string
+  description = "Log Analytics Name"
+  default = "java-function-log-analytics"
+}
+
 variable "service_name" {
   type = string
   description = "The service name"
